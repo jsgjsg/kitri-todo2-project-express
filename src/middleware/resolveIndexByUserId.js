@@ -2,7 +2,7 @@ import { users } from '../users.js'
 
 export const resolveIndexByUserId = (req, res, next) => {
     const {
-       params : { id },
+        params : { id },
     } = req;
     const parsedId = parseInt(id);
     if (isNaN(parsedId)) {
