@@ -75,14 +75,27 @@ router.put('/change-password', async (req, res) => {
 
 });
 
-router.delete('/delete-account', (req, res) => {
-  const index = users.findIndex(user => user.id === req.session.passport.user);
-  if (index === -1) {
-    return res.status(404).json({ message: 'Account not found' });
+router.delete('/delete-account', async (req, res) => {
+  // const index = users.findIndex(user => user.id === req.session.passport.user);
+  try {
+    const user = await User.findOne({ username : req.user.username});
+
+    if (!user) {
+      return res.status(401).json({ message: 'Authentication failed' });
+    }
+
+    await user.deleteOne({user});
+    req.logout((err) => {
+      if(err) {
+        console.error('Error logging out:', err);
+        return res.status(500).json({ message: 'Error logging out' });
+      }
+    }); // passport의 세션 제거 메소드
+    res.status(200).json({ message: 'Password changed successfully' });
   }
-  users.splice(index, 1);
-  req.logout();
-  res.status(200).json({ message: 'Account deleted successfully' });
+  catch(err) {
+    res.status(500).send("Internal server error");
+  }
 });
 
 export default router;
