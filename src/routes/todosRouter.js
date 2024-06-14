@@ -1,5 +1,6 @@
 import express from 'express';
 import Todo from '../models/Todo.js';
+import passport from 'passport';
 
 const router = express.Router();
 
@@ -31,7 +32,7 @@ router.post('/', async (req, res) => {
     // dueDate : 현재 시간 default
     const newTodo = await todo.save();
 
-    res.status(200).send("POST /api/todos HI");
+    res.status(200).send("등록 완료~");
   }
   catch(err) {
     res.status(500).send("POST /api/todos 서버오류");
@@ -52,7 +53,7 @@ router.put('/:id', async (req, res) => {
 
     if(!updatedTodo) return res.send("권한X");
 
-    res.status(200).send("PUT /api/todos/:id HI");
+    res.status(200).send("수정 완료~");
   }
   catch(err) {
     res.status(500).send("PUT /api/todos 서버오류");
@@ -69,7 +70,7 @@ router.delete('/:id', async (req, res) => {
 
     if(!deletedTodo) return res.status(403).send("권한X");
 
-    res.status(200).send("DELETE /api/todos/:id HI");
+    res.status(200).send("삭제 완료~");
   }
   catch(err) {
     res.status(500).send("DELETE /api/todos 서버오류");
