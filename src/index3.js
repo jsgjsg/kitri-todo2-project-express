@@ -28,10 +28,10 @@ app.use(passport.session());
 
 app.use('/api/auth', authRouter);
 app.use('/api/users', authHandler.checkAuthentication, usersRouter);
-app.use('/api/todos', authHandler.checkAuthentication, todosRouter);
+app.use('/api/todos', passport.authenticate('jwt', { session : false }), todosRouter);
 
-app.listen(4000, () => {
-  console.log('Server running on port 3000');
+app.listen(5000, () => {
+  console.log('Server running on port 5000');
 });
 
 export default app;
