@@ -1,5 +1,3 @@
-import { users } from '../users.js'
-
 export const resolveIndexByUserId = (req, res, next) => {
     const {
         params : { id },

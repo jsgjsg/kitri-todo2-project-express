@@ -11,7 +11,3 @@ const TodoSchema = new mongoose.Schema({
 const Todo = mongoose.model("Todo", TodoSchema);
 
 export default Todo;
-
-// title, description : 필수!
-// completed : false default
-// dueDate : 현재 시간 default

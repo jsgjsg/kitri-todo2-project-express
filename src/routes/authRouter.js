@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import passport from 'passport';
-import { users } from '../users.js';
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 import { generateAccessToken, generateRefreshToken } from '../utils/authUtils.js';
@@ -54,6 +53,9 @@ router.post('/refresh-token', async(req, res) => {
 })
 
 router.post('/logout', async (req, res) => {
+  console.log(req.user);
+
+
   const { refreshToken } = req.body;
   if(!refreshToken) return res.sendStatus(401);
 
@@ -94,12 +96,15 @@ router.post('/join', async (req, res) => {
   }
 });
 
-router.put('/change-password', async (req, res) => {
+router.put('/change-password', passport.authenticate('jwt', { session : false }), async (req, res) => {
   const { oldPassword, newPassword } = req.body;
-
   try {
     // const user = users.find(user => user.id === req.session.passport.user);
+    console.log(req.body.username);
+    console.log(req.user);
+
     const user = await User.findOne({ username : req.user.username});
+
     console.log(user);
     if (!user || oldPassword != user.password) {
       return res.status(401).json({ message: 'Authentication failed' });

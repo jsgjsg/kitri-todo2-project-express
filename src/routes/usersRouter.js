@@ -1,5 +1,4 @@
 import express from 'express';
-import { users } from '../users.js';
 import { resolveIndexByUserId } from '../middleware/resolveIndexByUserId.js';
 import { validateUsersQuery } from '../middleware/validationHandler.js';
 
