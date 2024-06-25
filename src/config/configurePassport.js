@@ -9,11 +9,11 @@ const configurePassport = () => {
   passport.use(jwtStrategy);
 
   passport.serializeUser((user, done) => {
-    done(null, user.username);
+    done(null, user.email);
   });
 
-  passport.deserializeUser(async (username, done) => {
-    const user = await User.findOne({username})
+  passport.deserializeUser(async (email, done) => {
+    const user = await User.findOne({email})
     
     if (user) {
       done(null, user);
