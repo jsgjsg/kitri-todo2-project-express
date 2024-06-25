@@ -1,31 +1,41 @@
-import express from 'express';
-import Todo from '../models/Todo.js';
-import passport from 'passport';
+import express from "express";
+import Todo from "../models/Todo.js";
+import passport from "passport";
 
 const router = express.Router();
 
-router.get('/', async (req, res) => {
+router.get("/", async (req, res) => {
   try {
-    const todo = await Todo.find({userId : req.user._id});
+    const todo = await Todo.find({ userId: req.user._id });
     res.status(200).json(todo);
-  }
-  catch(err) {
+  } catch (err) {
     res.status(500).send("GET /api/todos 서버오류");
   }
-})
+});
 
-router.post('/', async (req, res) => {
+router.get("/:date", async (req, res) => {
+  try {
+    const { date } = req.params;
+    const todo = await Todo.find({ userId: req.user._id, dueDate: date });
+    res.status(200).json(todo);
+  } catch (err) {
+    res.status(500).send("GET /api/todos 서버오류");
+  }
+});
+
+router.post("/", async (req, res) => {
   try {
     const { title, description, completed, dueDate } = req.body;
 
-    const todo = new Todo ({
+    const todo = new Todo({
       title: title,
       description: description,
-      userId: req.user._id
+      userId: req.user._id,
+      dueDate: dueDate,
     });
 
-    if(completed) todo.completed = completed;
-    if(dueDate) todo.dueDate = dueDate;
+    if (completed) todo.completed = completed;
+    if (dueDate) todo.dueDate = dueDate;
 
     // title, description : 필수!
     // completed : false default
@@ -33,13 +43,12 @@ router.post('/', async (req, res) => {
     const newTodo = await todo.save();
 
     res.status(200).send("등록 완료~");
-  }
-  catch(err) {
+  } catch (err) {
     res.status(500).send("POST /api/todos 서버오류");
   }
-})
+});
 
-router.put('/:id', async (req, res) => {
+router.put("/:id", async (req, res) => {
   // title, description, completed, dueDate
   try {
     const { id } = req.params;
@@ -48,34 +57,33 @@ router.put('/:id', async (req, res) => {
     const updatedTodo = await Todo.findOneAndUpdate(
       { _id: id, userId: req.user._id },
       { title, description, completed, dueDate },
-      { new: true, runValidators: true}
+      { new: true, runValidators: true }
     );
 
-    if(!updatedTodo) return res.send("권한X");
+    if (!updatedTodo) return res.send("권한X");
 
     res.status(200).send("수정 완료~");
-  }
-  catch(err) {
+  } catch (err) {
     res.status(500).send("PUT /api/todos 서버오류");
   }
-})
+});
 
-router.delete('/:id', async (req, res) => {
+router.delete("/:id", async (req, res) => {
   try {
     const { id } = req.params;
 
-    const deletedTodo = await Todo.findOneAndDelete(
-      { _id: id, userId: req.user._id }
-    );
+    const deletedTodo = await Todo.findOneAndDelete({
+      _id: id,
+      userId: req.user._id,
+    });
 
-    if(!deletedTodo) return res.status(403).send("권한X");
+    if (!deletedTodo) return res.status(403).send("권한X");
 
     res.status(200).send("삭제 완료~");
-  }
-  catch(err) {
+  } catch (err) {
     res.status(500).send("DELETE /api/todos 서버오류");
   }
-})
+});
 
 // CRUD 구현
 // 로그인 한 유저의 todolist CRUD 구현
