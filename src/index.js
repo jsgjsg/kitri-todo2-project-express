@@ -1,8 +1,8 @@
 import express from 'express';
 import session from 'express-session';
 import passport from 'passport';
+
 import authRouter from './routes/authRouter.js';
-import usersRouter from './routes/usersRouter.js';
 import todosRouter from './routes/todosRouter.js';
 import todosTmpRouter from './routes/todosTmpRouter.js';
 
@@ -33,7 +33,6 @@ app.use(cors({
 }));
 
 app.use('/api/auth', authRouter);
-app.use('/api/users', authHandler.checkAuthentication, usersRouter);
 app.use('/api/todos', passport.authenticate('jwt', { session : false }), todosRouter);
 app.use('/api/todosTmp', todosTmpRouter);
 

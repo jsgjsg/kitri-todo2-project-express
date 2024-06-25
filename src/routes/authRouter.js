@@ -23,8 +23,6 @@ router.post('/login', (req, res, next) => {
 
       user.refreshToken = refreshToken;
       
-      console.log(user);
-
       await user.save();
 
       return res.status(200).json({ accessToken, refreshToken });
@@ -74,16 +72,17 @@ router.post('/logout', async (req, res) => {
 });
 
 router.post('/join', async (req, res) => {
-  const { username, age, password } = req.body;
-  // const userExists = users.some(user => user.username === username);
+  const { email, age, password } = req.body;
+  // const userExists = users.some(user => user.email === email);
 
   try{
-    const user = await User.findOne({username});
+    const user = await User.findOne({email});
+    console.log(user);
     if (user) {
       return res.status(409).json({ message: 'User already exists' });
     }
 
-    const newUser = new User({ username, age, password });
+    const newUser = new User({ email, age, password });
     const savedUser = await newUser.save();
 
     if(!savedUser) throw new Error("User save operation failed");
@@ -100,10 +99,10 @@ router.put('/change-password', passport.authenticate('jwt', { session : false })
   const { oldPassword, newPassword } = req.body;
   try {
     // const user = users.find(user => user.id === req.session.passport.user);
-    console.log(req.body.username);
+    console.log(req.body.email);
     console.log(req.user);
 
-    const user = await User.findOne({ username : req.user.username});
+    const user = await User.findOne({ email : req.user.email});
 
     console.log(user);
     if (!user || oldPassword != user.password) {
@@ -119,23 +118,17 @@ router.put('/change-password', passport.authenticate('jwt', { session : false })
 
 });
 
-router.delete('/delete-account', async (req, res) => {
-  // const index = users.findIndex(user => user.id === req.session.passport.user);
+router.delete('/delete-account', passport.authenticate('jwt', { session : false }), async (req, res) => {
   try {
-    const user = await User.findOne({ username : req.user.username});
+    const user = await User.findOne({ email : req.user.email});
 
     if (!user) {
       return res.status(401).json({ message: 'Authentication failed' });
     }
 
     await user.deleteOne({user});
-    req.logout((err) => {
-      if(err) {
-        console.error('Error logging out:', err);
-        return res.status(500).json({ message: 'Error logging out' });
-      }
-    }); // passport의 세션 제거 메소드
-    res.status(200).json({ message: 'Password changed successfully' });
+    
+    res.status(200).json({ message: 'delete account successfully' });
   }
   catch(err) {
     res.status(500).send("Internal server error");
