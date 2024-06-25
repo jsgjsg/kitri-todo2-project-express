@@ -42,7 +42,7 @@ router.post("/", async (req, res) => {
     // dueDate : 현재 시간 default
     const newTodo = await todo.save();
 
-    res.status(200).send("등록 완료~");
+    res.status(200).send(newTodo);
   } catch (err) {
     res.status(500).send("POST /api/todos 서버오류");
   }
@@ -54,15 +54,18 @@ router.put("/:id", async (req, res) => {
     const { id } = req.params;
     const { title, description, completed, dueDate } = req.body;
 
+    console.log(req.params);
     const updatedTodo = await Todo.findOneAndUpdate(
       { _id: id, userId: req.user._id },
       { title, description, completed, dueDate },
       { new: true, runValidators: true }
     );
 
+    console.log(updatedTodo);
+
     if (!updatedTodo) return res.send("권한X");
 
-    res.status(200).send("수정 완료~");
+    res.status(200).send(updatedTodo);
   } catch (err) {
     res.status(500).send("PUT /api/todos 서버오류");
   }
@@ -79,7 +82,7 @@ router.delete("/:id", async (req, res) => {
 
     if (!deletedTodo) return res.status(403).send("권한X");
 
-    res.status(200).send("삭제 완료~");
+    res.status(200).send(deletedTodo);
   } catch (err) {
     res.status(500).send("DELETE /api/todos 서버오류");
   }
