@@ -5,7 +5,7 @@ const TodoSchema = new mongoose.Schema({
   description: { type: String },
   completed: { type: Boolean, default: false },
   //dueDate: { type: Date, default: Date.now },
-  fixOX: { type: Boolean },
+  fixOX: { type: Boolean, default: false },
   dueDate: { type: String },
   userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
 });
