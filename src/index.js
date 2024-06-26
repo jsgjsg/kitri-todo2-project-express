@@ -5,6 +5,7 @@ import passport from 'passport';
 import authRouter from './routes/authRouter.js';
 import todosRouter from './routes/todosRouter.js';
 import todosTmpRouter from './routes/todosTmpRouter.js';
+import deadlineTodosRouter from './routes/deadlineTodosRouter.js';
 
 import configurePassport from './config/configurePassport.js';
 import cookieParser from 'cookie-parser';
@@ -34,6 +35,7 @@ app.use(cors({
 
 app.use('/api/auth', authRouter);
 app.use('/api/todos', passport.authenticate('jwt', { session : false }), todosRouter);
+app.use('/api/deadline', passport.authenticate('jwt', { session : false }), deadlineTodosRouter);
 app.use('/api/todosTmp', todosTmpRouter);
 
 app.listen(3000, () => {
