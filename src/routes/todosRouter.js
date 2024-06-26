@@ -13,6 +13,21 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.get("/hasDate", async (req, res) => {
+  try {
+    const todos = await Todo.find({ userId: req.user._id });
+    let dates = [];
+    todos.forEach((todo) => {
+      dates.push(todo.dueDate);
+    })
+    
+    res.send([...new Set(dates)]);
+
+  } catch (err) {
+    res.status(500).send("GET /api/todos/hasDate 서버오류");
+  }
+})
+
 router.get("/:date", async (req, res) => {
   try {
     const { date } = req.params;
