@@ -25,13 +25,14 @@ router.get("/:date", async (req, res) => {
 
 router.post("/", async (req, res) => {
   try {
-    const { title, description, completed, dueDate } = req.body;
+    const { title, description, completed, dueDate, fixOX } = req.body;
 
     const todo = new Todo({
       title: title,
       description: description,
       userId: req.user._id,
       dueDate: dueDate,
+      fixOX: fixOX,
     });
 
     if (completed) todo.completed = completed;
