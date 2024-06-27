@@ -8,6 +8,7 @@ const TodoSchema = new mongoose.Schema({
   fixOX: { type: Boolean, default: false },
   dueDate: { type: String },
   userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  deadlineId: { type: mongoose.Schema.Types.ObjectId, ref: "DeadlineTodo" }
 });
 
 const Todo = mongoose.model("Todo", TodoSchema);

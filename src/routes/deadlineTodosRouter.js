@@ -1,5 +1,6 @@
 import express from "express";
 import DeadlineTodo from "../models/DeadlineTodo.js";
+import Todo from "../models/Todo.js";
 
 const router = express.Router();
 
@@ -7,6 +8,18 @@ router.get("/", async (req, res) => {
   try {
     const todo = await DeadlineTodo.find({ userId: req.user._id });
     res.status(200).json(todo);
+  } catch (err) {
+    res.status(500).send("GET /api/todos 서버오류");
+  }
+});
+
+
+router.get("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deadlineTodo = await DeadlineTodo.find({ _id: id, userId: req.user._id });
+    const todos = await Todo.find({ deadlineId: id });
+    res.status(200).json({deadlineTodo, todos});
   } catch (err) {
     res.status(500).send("GET /api/todos 서버오류");
   }
