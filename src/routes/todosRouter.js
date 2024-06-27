@@ -13,6 +13,16 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.get("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const todo = await Todo.find({ _id: id, userId: req.user._id });
+    res.status(200).json(todo);
+  } catch (err) {
+    res.status(500).send("GET /api/todos 서버오류");
+  }
+});
+
 router.get("/hasDate", async (req, res) => {
   try {
     const todos = await Todo.find({ userId: req.user._id });
@@ -40,7 +50,7 @@ router.get("/:date", async (req, res) => {
 
 router.post("/", async (req, res) => {
   try {
-    const { title, description, completed, dueDate, fixOX } = req.body;
+    const { title, description, completed, dueDate, fixOX, deadlineId } = req.body;
 
     const todo = new Todo({
       title: title,
@@ -48,14 +58,12 @@ router.post("/", async (req, res) => {
       userId: req.user._id,
       dueDate: dueDate,
       fixOX: fixOX,
+      deadlineId
     });
 
     if (completed) todo.completed = completed;
     if (dueDate) todo.dueDate = dueDate;
 
-    // title, description : 필수!
-    // completed : false default
-    // dueDate : 현재 시간 default
     const newTodo = await todo.save();
 
     res.status(200).send(newTodo);
