@@ -13,15 +13,15 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/:id", async (req, res) => {
-  try {
-    const { id } = req.params;
-    const todo = await Todo.find({ _id: id, userId: req.user._id });
-    res.status(200).json(todo);
-  } catch (err) {
-    res.status(500).send("GET /api/todos 서버오류");
-  }
-});
+// router.get("/id/:id", async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     const todo = await Todo.find({ _id: id, userId: req.user._id });
+//     res.status(200).json(todo);
+//   } catch (err) {
+//     res.status(500).send("GET /api/todos 서버오류");
+//   }
+// });
 
 router.get("/hasDate", async (req, res) => {
   try {
@@ -29,16 +29,15 @@ router.get("/hasDate", async (req, res) => {
     let dates = [];
     todos.forEach((todo) => {
       dates.push(todo.dueDate);
-    })
-    
-    res.send([...new Set(dates)]);
+    });
 
+    res.send([...new Set(dates)]);
   } catch (err) {
     res.status(500).send("GET /api/todos/hasDate 서버오류");
   }
-})
+});
 
-router.get("/:date", async (req, res) => {
+router.get("/date/:date", async (req, res) => {
   try {
     const { date } = req.params;
     const todo = await Todo.find({ userId: req.user._id, dueDate: date });
@@ -50,7 +49,8 @@ router.get("/:date", async (req, res) => {
 
 router.post("/", async (req, res) => {
   try {
-    const { title, description, completed, dueDate, fixOX, deadlineId } = req.body;
+    const { title, description, completed, dueDate, fixOX, deadlineId } =
+      req.body;
 
     const todo = new Todo({
       title: title,
@@ -58,7 +58,7 @@ router.post("/", async (req, res) => {
       userId: req.user._id,
       dueDate: dueDate,
       fixOX: fixOX,
-      deadlineId
+      deadlineId,
     });
 
     if (completed) todo.completed = completed;
