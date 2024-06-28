@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 // await는 실제 비동기 처리 시 사용하는 키워드
 const connectDB = async () => {
   try {
-    await mongoose.connect("mongodb://localhost:27017/my-express-server", {
+    await mongoose.connect("mongodb://127.0.0.1:27017/my-express-server", {
       useNewUrlParser: true,
       useUnifiedTopology: true
   });
