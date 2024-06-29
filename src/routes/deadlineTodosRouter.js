@@ -9,10 +9,34 @@ router.get("/", async (req, res) => {
     const todo = await DeadlineTodo.find({ userId: req.user._id });
     res.status(200).json(todo);
   } catch (err) {
-    res.status(500).send("GET /api/todos 서버오류");
+    res.status(500).send("GET /api/deadline 서버오류");
   }
 });
 
+router.get("/date/hasDate", async (req, res) => {
+  try {
+    const todos = await DeadlineTodo.find({ userId: req.user._id });
+    let dates = [];
+    todos.forEach((todo) => {
+      dates.push(todo.deadline);
+    });
+
+    res.send([...new Set(dates)]);
+  } catch (err) {
+    res.status(500).send("GET /api/deadline/date/hasDate 서버오류");
+  }
+});
+
+router.get("/date/:date", async (req, res) => {
+  try {
+    const { date } = req.params;
+    const todo = await DeadlineTodo.find({ userId: req.user._id, deadline: date });
+
+    res.status(200).json(todo);
+  } catch (err) {
+    res.status(500).send("GET /api/deadline 서버오류");
+  }
+});
 
 router.get("/:id", async (req, res) => {
   try {

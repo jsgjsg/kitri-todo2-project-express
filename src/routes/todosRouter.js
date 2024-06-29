@@ -49,20 +49,21 @@ router.get("/date/:date", async (req, res) => {
 
 router.post("/", async (req, res) => {
   try {
-    const { title, description, completed, dueDate, fixOX, deadlineId } =
-      req.body;
+    const { title, description, completed, dueDate, fixOX, parentId } = req.body;
 
+    console.log(req.body);
     const todo = new Todo({
       title: title,
       description: description,
       userId: req.user._id,
       dueDate: dueDate,
-      fixOX: fixOX,
-      deadlineId,
+      fixOX: fixOX
     });
+    console.log(todo);
 
     if (completed) todo.completed = completed;
     if (dueDate) todo.dueDate = dueDate;
+    if (parentId) todo.deadlineId = parentId;
 
     const newTodo = await todo.save();
 
@@ -76,16 +77,17 @@ router.put("/:id", async (req, res) => {
   // title, description, completed, dueDate
   try {
     const { id } = req.params;
-    const { title, description, completed, dueDate } = req.body;
+    const { title, description, completed, dueDate, fixOX, parentId } = req.body;
 
-    console.log(req.params);
+    console.log(req.body);
+    
     const updatedTodo = await Todo.findOneAndUpdate(
       { _id: id, userId: req.user._id },
-      { title, description, completed, dueDate },
+      { title, description, completed, dueDate, fixOX, deadlineId: parentId ? parentId : null},
       { new: true, runValidators: true }
     );
 
-    console.log(updatedTodo);
+    // console.log(updatedTodo);
 
     if (!updatedTodo) return res.send("권한X");
 
