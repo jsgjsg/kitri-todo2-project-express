@@ -30,7 +30,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(cors({
-  origin: 'http://localhost:5173' // 요청을 허용할 도메인
+  origin: 'http://ast07-todo-react.s3-website.ap-northeast-2.amazonaws.com' // 요청을 허용할 도메인
 }));
 
 app.use('/api/auth', authRouter);
